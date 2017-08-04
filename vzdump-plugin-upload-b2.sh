@@ -52,43 +52,43 @@ if [ "$1" == "backup-end" ]; then
     exit 4
   fi
 
-  echo "SPLITTING into chunks sized <=$B2_SPLITSIZE_BYTE byte"
-  cd "$DUMPDIR"
-  time split --bytes=$B2_SPLITSIZE_BYTE --suffix-length=3 --numeric-suffixes "$TARBASENAME" "$SECONDARY/$TARBASENAME.split."
-  if [ $? -ne 0 ] ; then
-    echo "Something went wrong splitting."
-    exit 5
-  fi
+  #echo "SPLITTING into chunks sized <=$B2_SPLITSIZE_BYTE byte"
+  #cd "$DUMPDIR"
+  #time split --bytes=$B2_SPLITSIZE_BYTE --suffix-length=3 --numeric-suffixes "$TARBASENAME" "$SECONDARY/$TARBASENAME.split."
+  #if [ $? -ne 0 ] ; then
+  #  echo "Something went wrong splitting."
+  #  exit 5
+  #fi
 
-  echo "CHECKSUMMING splits"
-  cd "$SECONDARY"
-  sha1sum -b $TARBASENAME.split.* >> "$DUMPDIR/$TARBASENAME.sha1sums"
-  if [ $? -ne 0 ] ; then
-    echo "Something went wrong checksumming."
-    exit 6
-  fi
+  #echo "CHECKSUMMING splits"
+  #cd "$SECONDARY"
+  #sha1sum -b $TARBASENAME.split.* >> "$DUMPDIR/$TARBASENAME.sha1sums"
+  #if [ $? -ne 0 ] ; then
+  #  echo "Something went wrong checksumming."
+  #  exit 6
+  #fi
 
-  echo "Deleting whole file"
-  rm "$TARFILE"
+  #echo "Deleting whole file"
+  #rm "$TARFILE"
 
-  echo "ENCRYPTING"
-  cd "$SECONDARY"
-  ls -1 $TARBASENAME.split.* | time xargs --verbose -I % -n 1 -P $NUM_PARALLEL_GPG $GPG_BINARY --no-tty --compress-level 0 --passphrase-file $GPG_PASSPHRASE_FILE -c --output "$DUMPDIR/%.gpg" "%"
-  if [ $? -ne 0 ] ; then
-    echo "Something went wrong encrypting."
-    exit 7
-  fi
+  #echo "ENCRYPTING"
+  #cd "$SECONDARY"
+  #ls -1 $TARBASENAME.split.* | time xargs --verbose -I % -n 1 -P $NUM_PARALLEL_GPG $GPG_BINARY --no-tty --compress-level 0 --passphrase-file $GPG_PASSPHRASE_FILE -c --output "$DUMPDIR/%.gpg" "%"
+  #if [ $? -ne 0 ] ; then
+  #  echo "Something went wrong encrypting."
+  #  exit 7
+  #fi
 
-  echo "Checksumming encrypted splits"
-  cd "$DUMPDIR"
-  sha1sum -b $TARBASENAME.split.*.gpg >> "$TARBASENAME.sha1sums"
-  if [ $? -ne 0 ] ; then
-    echo "Something went wrong checksumming."
-    exit 8
-  fi
+  #echo "Checksumming encrypted splits"
+  #cd "$DUMPDIR"
+  #sha1sum -b $TARBASENAME.split.*.gpg >> "$TARBASENAME.sha1sums"
+  #if [ $? -ne 0 ] ; then
+  #  echo "Something went wrong checksumming."
+  #  exit 8
+  #fi
 
-  echo "Deleting cleartext splits"
-  rm $SECONDARY/$TARBASENAME.split.???
+  #echo "Deleting cleartext splits"
+  #rm $SECONDARY/$TARBASENAME.split.???
 
   echo "AUTHORIZING AGAINST B2"
   $B2_BINARY authorize_account $B2_ACCOUNT_ID $B2_APPLICATION_KEY
@@ -123,7 +123,7 @@ if [ "$1" == "backup-end" ]; then
     exit 11
   fi
 
-  echo "DELETING local encrypted splits"
-  rm $TARFILE.split.*.gpg
+  #echo "DELETING local encrypted splits"
+  #rm $TARFILE.split.*.gpg
     
 fi
